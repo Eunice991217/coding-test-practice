@@ -3,7 +3,7 @@ using namespace std;
 
 int main()
 {
-    string str, pattern, out[100];
+    string str, pattern;
     int n;
     
     cin >> n;
@@ -30,10 +30,6 @@ int main()
             cout << "NE" << "\n";
         }
     }
-    
-//    for(int i=0;i<n;i++) {
-//        cout << out[i] << endl;
-//    }
     
     return 0;
 }
