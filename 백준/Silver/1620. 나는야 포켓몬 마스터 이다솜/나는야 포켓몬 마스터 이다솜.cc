@@ -8,15 +8,15 @@ int main(void)
 
     map<string, int> mp;
     map<int, string> mp2;
-    int n, m, num=1;
+    int n, m;
     cin >> n >> m;
 
     for (int i = 0; i < n; i++)
     {
         string str;
         cin >> str;
-        mp.insert(make_pair(str, num));
-        mp2.insert(make_pair(num++, str));
+        mp[str] = i+1;
+        mp2[i+1]=str;
     }
 
     for (int i = 0; i < m; i++)
