@@ -29,10 +29,10 @@ int main(){
         int sx=0, sy=0;
         int ret = 0;
         
-        for(int j=0;j<n;j++){
-            for(int k=0;k<m;k++){
-                a[j][k] = 0;
-                visited[j][k] = 0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                a[i][j] = 0;
+                visited[i][j] = 0;
             }
         }
         
