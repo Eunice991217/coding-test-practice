@@ -2,10 +2,10 @@
 using namespace std;
 
 int n, m, ret;
-int a[12][12];
+int a[8][8];
 vector<pair<int, int>> virusList;
 vector<pair<int, int>> wallList;
-int visited[12][12];
+int visited[8][8];
 int dx[4] = {0, 1, 0, -1};
 int dy[4] = {-1, 0, 1, 0};
 
@@ -21,7 +21,7 @@ void dfs(int y, int x) {
 }
 
 int solve() {
-    fill(&visited[0][0], &visited[0][0] + 10 * 10, 0);
+    fill(&visited[0][0], &visited[0][0] +8 * 8, 0);
     for(pair<int, int> b : virusList) {
         visited[b.first][b.second] = 1;
         dfs(b.first, b.second);
