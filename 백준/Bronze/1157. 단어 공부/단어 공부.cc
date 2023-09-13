@@ -4,31 +4,29 @@ string str;
 int num[26];
 
 char go(string str) {
-    char ch;
     int maxCnt=0;
-    int index=-1;
+    int index=0;
 
-    for (int i = 0; i < str.size(); i++) {
-        str[i] = toupper(str[i]);
+    for(int i=0;i<str.size();i++){
+        str[i] = toupper(str[i]); // 다 대문자로 변경 (대소문자 구분 없으므로)
         num[str[i]-'A']++;
     }
 
     for(int i=0;i<26;i++) {
-        if(maxCnt < num[i]) {
+        if(num[i] > maxCnt) {
             maxCnt = num[i];
             index = i;
         }
     }
 
     for(int i=0;i<26;i++) {
-        if(i==index) continue;
-        if(num[i] == maxCnt) {
+        if(index==i) continue;
+        if(num[i]==maxCnt) {
             return '?';
         }
     }
 
-    ch = (char)(index+'A');
-    return ch;
+    return (char)(index+'A');
 }
 
 int main() {
@@ -36,6 +34,6 @@ int main() {
 
     cin >> str;
 
-    cout <<  go(str);
+    cout << go(str);
 
 }
