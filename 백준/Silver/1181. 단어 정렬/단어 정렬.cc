@@ -1,43 +1,33 @@
-//
-//  1181.cpp
-//  BOJ
-//
-//  Created by 김민경 on 2023/01/20.
-//
-
-#include <iostream>
-#include <algorithm>
-#include <stdio.h>
-#include <string>
+#include <bits/stdc++.h>
 using namespace std;
+int n;
+string a[20004];
+vector<pair<string, int>> v;
+map<string, int> mp;
 
-bool compare(string s1, string s2) {
-    if (s1.size() == s2.size()) {
-        return  s1 < s2;
-    }
-    else {
-        return s1.size() < s2.size();
-    }
+bool cmp(pair<string, int> &a, pair<string, int> &b) {
+    if(a.second == b.second) return a.first<b.first; // 길이가 같으면 사전 순으로
+    return a.second < b.second; // 길이가 짧은 것부터
 }
 
 int main() {
-    string s[20000];
-    int n;
-    
+
     cin >> n;
-    
-    for(int i=0; i<n; i++) {
-        cin >> s[i];
-    }
-    
-    sort(s, s+n, compare);
-    
+
     for(int i=0;i<n;i++) {
-        if(s[i]==s[i-1]) {
-            continue;
-        }
-        cout << s[i] << "\n";
+        cin >> a[i];
+        v.push_back({a[i], a[i].size()});
     }
 
-    
+    sort(v.begin(), v.end(), cmp);
+
+    // 중복제거
+    for(int i=0;i<n;i++) {
+        if(mp[v[i].first] > 0) continue;
+        else mp[v[i].first]++;
+        cout << v[i].first << '\n';
+    }
+
+    return 0;
 }
+
