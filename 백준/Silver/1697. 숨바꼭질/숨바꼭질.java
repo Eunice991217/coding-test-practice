@@ -54,7 +54,7 @@ public class Main {
                     return;
                 }
 
-                if(next>=0 && next<visited.length && visited[next]==0) { // 방문 하지 않았 다면
+                if(next>=0 && next<100004 && visited[next]==0) { // 방문 하지 않았 다면
                     q.add(next); // next 를 큐에 넣고
                     visited[next] = visited[x]+1;
                 }
