@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static int arr[], tmp[];
+    static int arr[], n;
     static boolean visited[];
     static boolean check[];
     static List<Integer> list[];
@@ -14,22 +14,17 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        int n;
-
         st = new StringTokenizer(br.readLine());
 
         n = Integer.parseInt(st.nextToken());
 
-        arr = new int[11];
-        tmp = new int[11];
+        arr = new int[n];
 
-        visited = new boolean[101];
-        check = new boolean[101];
-        list = new ArrayList[11];
+        visited = new boolean[n];
+        check = new boolean[n];
+        list = new ArrayList[n];
 
-        Arrays.fill(visited, false);
-
-        for(int i=0;i<11;i++) {
+        for(int i=0;i<n;i++) {
             list[i] = new ArrayList<Integer>();
         }
 
@@ -48,7 +43,7 @@ public class Main {
             }
         }
 
-        combi(0,0, n);
+        combi(0,0);
 
         if(ret==Integer.MAX_VALUE) {
             System.out.println(-1);
@@ -56,33 +51,30 @@ public class Main {
             System.out.println(ret);
         }
 
-
     }
 
-    public static void combi(int start, int depth, int r) {
-        if(depth<=r) {
-            int groupCnt=0;
-            int aTeam=0, bTeam=0;
-            Arrays.fill(check, false);
-            for(int i=0;i<r;i++) {
-                if(!check[i]) { // 같은 팀 확인 용도
-                    bfs(i, visited[i]);
-                    groupCnt++;
-                }
-            }
-            for(int i=0;i<r;i++) {
-                if(visited[i]) aTeam+=arr[i];
-                else bTeam+=arr[i];
-            }
-            if(groupCnt==2) {
-                ret = Math.min(ret, Math.abs(aTeam-bTeam));
+    public static void combi(int start, int depth) {
+        int groupCnt=0;
+        int aTeam=0, bTeam=0;
+        Arrays.fill(check, false);
+        for(int i=0;i<n;i++) {
+            if(!check[i]) {
+                bfs(i, visited[i]);
+                groupCnt++;
             }
         }
+        for(int i=0;i<n;i++) {
+            if(visited[i]) aTeam+=arr[i];
+            else bTeam+=arr[i];
+        }
+        if(groupCnt==2) {
+            ret = Math.min(ret, Math.abs(aTeam-bTeam));
+        }
 
-        for(int i=start;i<r;i++) {
+        for(int i=start;i<n;i++) {
             if(!visited[i]) {
                 visited[i]=true;
-                combi(i, depth+1, r);
+                combi(i, depth+1);
                 visited[i]=false;
             }
         }
