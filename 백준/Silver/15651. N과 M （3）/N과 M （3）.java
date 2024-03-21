@@ -1,48 +1,61 @@
+
+
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.io.OutputStreamWriter;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
 
     static int n, m;
-    static StringBuilder sb = new StringBuilder();
+    static List<Integer> list;
+    static boolean visited[];
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
         StringTokenizer st;
 
         st = new StringTokenizer(br.readLine());
-
+        list = new ArrayList<Integer>();
+        visited = new boolean[9];
+        
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
-
-        ArrayList<Integer> a = new ArrayList<>();
-        for(int i=0;i<n;i++) {
-            a.add(i+1);
-        }
-        int output[] = new int[a.size()];
-        permutation(a, output, 0, m);
-        System.out.println(sb);
-
+        
+        go();
+        
+        bw.flush();
+        br.close();
+        bw.close();
+        
     }
-
-
-    public static void permutation(ArrayList<Integer> a, int output[], int depth, int r) {
-
-        if(depth==r) {
-            for(int i=0;i<r;i++) {
-                sb.append(output[i] + " ");
-            }
-            sb.append("\n");
-            return;
-        }
-
-        for(int i=0;i< a.size();i++) {
-            output[depth] = a.get(i);
-            permutation(a, output, depth + 1, r);
-        }
-
+    
+    public static void go() throws IOException {
+    	if(list.size()==m) {
+    		for(int i=0;i<m;i++) {
+    			bw.write(list.get(i)+" ");
+    		}
+    		bw.newLine();
+    		return;
+    	}
+    	
+    	for(int i=1;i<=n;i++) {
+    		list.add(i);
+    		go();
+    		list.remove(list.size()-1);
+    	}
     }
 
 }
