@@ -14,7 +14,6 @@ public class Main {
     static int n, m;
     static List<Integer> list;
     static List<Integer> arr;
-
     static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
     public static void main(String[] args) throws IOException {
@@ -59,7 +58,6 @@ public class Main {
             go(arr.get(i), i+1);
             list.remove(list.size()-1);
         }
-
     }
 
 
