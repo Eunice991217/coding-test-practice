@@ -5,7 +5,7 @@ import java.util.StringTokenizer;
 
 class Solution {
 
-    static int n, m, c, cost1, cost2, ans=0;
+    static int n, m, c, ans=0, work1=0, work2=0;
     static int map[][], v[];
 
     public static void main(String[] args) throws Exception {
@@ -22,6 +22,9 @@ class Solution {
 
             map = new int[n][n];
             v = new int[m];
+            ans=0;
+            work1=0;
+            work2=0;
 
             for(int i=0;i<n;i++) {
                 st = new StringTokenizer(br.readLine());
@@ -30,73 +33,74 @@ class Solution {
                 }
             }
 
-            cost1 = 0;
-            cost2 = 0;
-            ans=0;
             solve();
             System.out.println("#" + tc + " " + ans);
         }
     }
 
+    // 조합 (벌통 2개 뽑기, 일꾼 2명)
     static void solve() {
-        int[][] check = new int[n][n];
-        int flag=0;
-        // 일꾼 1 벌통 위치 찾기
+        int check[][] = new int[n][n];
+
         for(int i=0;i<n;i++) {
-            for(int j=0;j<n-(m-1);j++) {
-                // 일꾼 1 벌통 방문 처리
+            for(int j=0;j<n-m+1;j++) {
+
                 for(int k=j;k<j+m;k++) {
                     check[i][k] = 1;
                 }
 
-                // 일꾼 2 벌통 위치 찾기
+                int flag=0;
                 for(int a=0;a<n;a++) {
-                    for(int b=0;b<n-(m-1);b++) {
-                        flag=1;
-                        for(int c=0;c<m;c++) { // 일꾼 1 이랑 겹치는 지 체크
+                    for(int b=0;b<n-m+1;b++) {
+                        for(int c=0;c<m;c++) {
                             if(check[a][b+c]==1) {
-                                flag=0;
+                                flag=1;
                                 break;
                             }
                         }
-                        if(flag==0) continue; // 겹치면 통과
+                        if(flag==1) continue;
 
-                        check(i, j, a, b, 0);
-                        ans = Math.max(ans, cost1+cost2);
-                        cost1=0;
-                        cost2=0;
+                        // 벌통 다 선택 했으면
+                        // 수익 계산
+                        cal(i, j, a, b, 0);
+                        ans = Math.max(ans, work1+work2);
+                        work1 = 0;
+                        work2 = 0;
                     }
                 }
 
-                // 일꾼 1 백트래킹
+                // backtracking
                 for(int k=j;k<j+m;k++) {
                     check[i][k] = 0;
                 }
+
             }
         }
     }
 
-    static void check(int i, int j, int a, int b, int depth) {
+    // 부분 집합 (뽑은 벌통들 중에 수익의 합 최대)
+    static void cal(int i, int j, int a, int b, int depth) {
         if(depth==m) {
-            int cnt1=0, cnt2=0, c1=0, c2=0;
+            int cnt1=0, cnt2=0, profit1=0, profit2=0;
+            // cnt1, cnt2 : c 보다 작은지 확인
+            // profit1, profit2 : 수익의 합
             for(int k=0;k<m;k++) {
                 if(v[k]==1) {
-                    cnt1 += map[i][j+k];
-                    c1 += (int) Math.pow(map[i][j+k], 2);
-                    cnt2 += map[a][b+k];
-                    c2 += (int) Math.pow(map[a][b+k], 2);
+                    cnt1+=map[i][j+k];
+                    profit1+=(int) Math.pow(map[i][j+k], 2);
+                    cnt2+=map[a][b+k];
+                    profit2+=(int) Math.pow(map[a][b+k], 2);
                 }
             }
-            if(cnt1<=c) cost1 = Math.max(cost1, c1);
-            if(cnt2<=c) cost2 = Math.max(cost2, c2);
+            if(cnt1<=c) work1 = Math.max(work1, profit1);
+            if(cnt2<=c) work2 = Math.max(work2, profit2);
             return;
         }
 
-        // 부분 집합
         v[depth]=1;
-        check(i, j, a, b, depth+1);
+        cal(i, j, a, b, depth+1);
         v[depth]=0;
-        check(i, j, a, b, depth+1);
+        cal(i, j, a, b, depth+1);
     }
 
 }
