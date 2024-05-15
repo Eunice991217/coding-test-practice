@@ -1,101 +1,106 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
-public class Main {
-    static int arr[], n;
-    static boolean visited[];
-    static boolean check[];
-    static List<Integer> list[];
-    static int ret=Integer.MAX_VALUE;
+class Main {
+    static int n, arr[], map[][], v[], ans=Integer.MAX_VALUE, res[]; // map : 인접 행렬
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
         st = new StringTokenizer(br.readLine());
-
         n = Integer.parseInt(st.nextToken());
 
-        arr = new int[n];
-
-        visited = new boolean[n];
-        check = new boolean[n];
-        list = new ArrayList[n];
-
-        for(int i=0;i<n;i++) {
-            list[i] = new ArrayList<Integer>();
-        }
-
         st = new StringTokenizer(br.readLine());
-        for(int i=0;i<n;i++) {
+        arr = new int[n+1];
+        v = new int[n+1];
+        for(int i=1;i<=n;i++) {
+            // 선거구 인구
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        int cnt=0;
-        for(int i=0;i<n;i++) {
+        map = new int [n+1][n+1];
+        for(int i=1;i<=n;i++) {
             st = new StringTokenizer(br.readLine());
-            cnt = Integer.parseInt(st.nextToken());
-            for(int j=0;j<cnt;j++) {
-                int tmp = Integer.parseInt(st.nextToken());
-                list[i].add(tmp-1);
+            int m = Integer.parseInt(st.nextToken());
+            for(int j=0;j<m;j++){
+                // 인접 행렬 만들기
+                map[i][Integer.parseInt(st.nextToken())]=1;
             }
         }
 
-        combi(0,0);
-
-        if(ret==Integer.MAX_VALUE) {
-            System.out.println(-1);
-        }else {
-            System.out.println(ret);
-        }
+        // 선거구 2개로 나누기
+        subs(1);
+        // 두 선거구 인구 차이의 최솟값 출력
+        System.out.println(ans==Integer.MAX_VALUE ? -1 : ans);
 
     }
 
-    public static void combi(int start, int depth) {
-        int groupCnt=0;
-        int aTeam=0, bTeam=0;
-        Arrays.fill(check, false);
-        for(int i=0;i<n;i++) {
-            if(!check[i]) {
-                bfs(i, visited[i]);
-                groupCnt++;
+    // 선거구 2개로 나누기
+    static void subs(int depth) {
+
+        if(depth==n+1) {
+            // 두 팀 연결 되어 있는지 확인
+            if(bfs(1) && bfs(0)) {
+                ans = Math.min(ans, cal());
             }
-        }
-        for(int i=0;i<n;i++) {
-            if(visited[i]) aTeam+=arr[i];
-            else bTeam+=arr[i];
-        }
-        if(groupCnt==2) {
-            ret = Math.min(ret, Math.abs(aTeam-bTeam));
+            return;
         }
 
-        for(int i=start;i<n;i++) {
-            if(!visited[i]) {
-                visited[i]=true;
-                combi(i, depth+1);
-                visited[i]=false;
-            }
-        }
+        v[depth] = 1;
+        subs(depth+1);
+        v[depth] = 0;
+        subs(depth+1);
     }
 
-    public static void bfs(int u, boolean team) {
-        Queue<Integer> q = new LinkedList<>();
-        q.add(u);
-        check[u] = true;
+    // 연결 확인
+    static boolean bfs(int flag) {
+        int check[] = new int[n+1];
+        LinkedList<Integer> list = new LinkedList<>();
 
-        while(!q.isEmpty()) {
-            int x = q.poll();
+        // 시작점 찾기
+        for(int i=1;i<=n;i++) {
+            if(v[i]==flag) {
+                list.addLast(i);
+                check[i]=1;
+                break;
+            }
+        }
 
-            for(int i = 0; i < list[x].size(); i++) {
-                int next = list[x].get(i);
-                if(!check[next] && visited[next]==team) {
-                    q.add(next);
-                    check[next]=true;
+        while(!list.isEmpty()) {
+            int cur = list.poll();
+
+            for(int i=1;i<=n;i++) {
+                // 시작점 또는 flag 와 다른 팀이면 continue
+                if(check[i]==1 || flag!=v[i]) continue;
+                if(map[cur][i]==1) {
+                    list.addLast(i);
+                    check[i]=1;
                 }
             }
         }
+
+        // 같은 팀인데 방문 안 한 곳이 있는지 확인
+        for(int i=1;i<=n;i++) {
+            // 모든 정점이 연결 되어 있지 않은 것
+            if(v[i]==flag && check[i]==0) return false;
+        }
+
+        return true;
     }
+
+    // 두 팀 점수 차 계산
+    static int cal() {
+        int teamA=0, teamB=0;
+
+        for(int i=1;i<=n;i++){
+            if(v[i]==1) teamA+=arr[i];
+            else teamB+=arr[i];
+        }
+
+        return Math.abs(teamA-teamB);
+    }
+
 
 }
