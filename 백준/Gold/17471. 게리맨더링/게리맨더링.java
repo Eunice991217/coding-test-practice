@@ -62,7 +62,7 @@ class Main {
         // 시작점 찾기
         for(int i=1;i<=n;i++) {
             if(v[i]==flag) {
-                list.addLast(i);
+                list.add(i);
                 check[i]=1;
                 break;
             }
@@ -75,7 +75,7 @@ class Main {
                 // 시작점 또는 flag 와 다른 팀이면 continue
                 if(check[i]==1 || flag!=v[i]) continue;
                 if(map[cur][i]==1) {
-                    list.addLast(i);
+                    list.add(i);
                     check[i]=1;
                 }
             }
