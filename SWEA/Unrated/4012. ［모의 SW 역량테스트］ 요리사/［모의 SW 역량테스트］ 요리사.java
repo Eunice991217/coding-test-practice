@@ -1,13 +1,12 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
 import java.util.*;
 
 class Solution {
 
-    static int n, map[][], min = Integer.MAX_VALUE, b[], v[];
+    static int n, map[][], ans=Integer.MAX_VALUE, v[], res[];
 
     public static void main(String[] args) throws Exception {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
@@ -15,54 +14,81 @@ class Solution {
 
         for(int tc=1;tc<=T;tc++) {
             st = new StringTokenizer(br.readLine());
-
             n = Integer.parseInt(st.nextToken());
 
-            map = new int[n][n];
-            b = new int[n];
-            v = new int[n];
-            min = Integer.MAX_VALUE;
-
-            for(int i=0;i<n;i++) {
+            map = new int[n+1][n+1];
+            v = new int[n+1];
+            res = new int[n+1];
+            for(int i=1;i<=n;i++) {
                 st = new StringTokenizer(br.readLine());
-                for(int j=0;j<n;j++) {
+                for(int j=1;j<=n;j++) {
                     map[i][j] = Integer.parseInt(st.nextToken());
                 }
             }
 
-            comb(0, 0);
+            for(int i=1;i<=n;i++) {
+                res[i]=i;
+            }
 
-            System.out.println("#" + tc + " " + min);
-
+            ans=Integer.MAX_VALUE; // 맛의 차이가 최소
+            solve(1);
+            System.out.println("#" + tc + " " + ans);
         }
 
 
     }
 
-    static void comb(int cnt, int start) {
-        if(cnt>=n/2) {
-            int asum=0, bsum=0;
-            for(int i=0;i<n;i++) {
-                for(int j=i+1;j<n;j++) {
-                    if(v[i]==1 && v[j]==1) {
-                        asum+=map[i][j];
-                        asum+=map[j][i];
-                    }else if(v[i]==0 && v[j]==0){ // v[i] == 0
-                        bsum+=map[i][j];
-                        bsum+=map[j][i];
-                    }
+    static void solve(int depth){
+        // 식재료 절반은 A
+        // 나머지 절반은 B
+        if(depth==n+1) {
+            String strA="", strB="";
+            List<Integer> listA = new ArrayList<>();
+            List<Integer> listB = new ArrayList<>();
+            for(int i=1;i<=n;i++) {
+                if(v[i]==1) { // A
+                    listA.add(res[i]);
+                }else { // B
+                    listB.add(res[i]);
+                }
+                if(listA.size()==listB.size() && listA.size()+listB.size()==n) { // 절반
+                    ans = Math.min(ans, cal(listA, listB));
                 }
             }
-            min = Math.min(min, Math.abs(asum-bsum));
             return;
         }
 
-        for(int i=start;i<n;i++) {
-            v[i] = 1;
-            comb(cnt+1, i+1);
-            v[i] = 0;
+        v[depth]=1;
+        solve(depth+1);
+        v[depth]=0;
+        solve(depth+1);
+    }
+
+    static int cal(List<Integer> A, List<Integer> B) {
+
+        // A 음식의 맛
+        int cntA=0;
+        for(int i=0;i<A.size();i++) {
+            for(int j=i+1;j<A.size();j++) {
+                int x = A.get(i);
+                int y = A.get(j);
+                cntA+=(map[x][y] + map[y][x]);
+            }
         }
 
+        // B 음식의 맛
+        int cntB=0;
+        for(int i=0;i<B.size();i++) {
+            for (int j = i + 1; j < B.size(); j++) {
+                int x = B.get(i);
+                int y = B.get(j);
+                cntB += (map[x][y] + map[y][x]);
+            }
+        }
+
+        return Math.abs(cntA-cntB);
+
     }
+
 
 }
