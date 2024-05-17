@@ -43,7 +43,7 @@ class Solution {
     }
 
     static void solve() {
-        PriorityQueue<Node> q = new PriorityQueue<>((o1, o2) -> Integer.compare(o1.d, o2.d));
+        PriorityQueue<Node> q = new PriorityQueue<>((o1, o2) -> {return o1.d-o2.d;});
         q.add(new Node(0, 0, 0));
 
         while(!q.isEmpty()) {
