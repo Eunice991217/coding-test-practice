@@ -29,8 +29,8 @@ public class Main {
         }
 
         for(int x=1;x<=n;x++) {
-            for(int xe=x; xe<=n;xe++) {
-                for(int y=1;y<=m;y++) {
+            for(int y=1; y<=m;y++) {
+                for(int xe=x;xe<=n;xe++) {
                     for(int ye=y;ye<=m;ye++) {
                         maxN = Math.max(maxN, sum[xe][ye] - sum[x-1][ye] - sum[xe][y-1] + sum[x-1][y-1]);
                     }
