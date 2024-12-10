@@ -1,90 +1,68 @@
+import java.util.*;
+import java.io.*;
 
+class Main {
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+    static int N, M, V; // 정점, 간선, 시작할 정점 번호
+    static int[][] map;
+    static int[] visited;
 
-public class Main {
-	
-	static int n, m, start;
-	static boolean visited[];
-	static ArrayList<Integer> list[];
-	
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		st = new StringTokenizer(br.readLine());
-		
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		start = Integer.parseInt(st.nextToken());
-		
-		list = new ArrayList[1001];
-		visited = new boolean[1001];
-		
-		for(int i=1;i<=n;i++) {
-			list[i] = new ArrayList<Integer>();
-		}
-		
-		int x=0, y=0;
-		for(int i=0;i<m;i++) {
-			st = new StringTokenizer(br.readLine());
-			x = Integer.parseInt(st.nextToken());
-			y = Integer.parseInt(st.nextToken());
-			
-			list[x].add(y);
-			list[y].add(x);
-		}
-		
-		for(int i=1;i<=n;i++) {
-			Collections.sort(list[i]);
-		}
-		
-		
-		dfs(start);
-		for(int i=1;i<=n;i++) {
-			visited[i] = false;
-		}
-		System.out.println();
-		bfs(start);
-		
-		
-		
-	}
-	
-	public static void dfs(int x) {
-		visited[x] = true;
-		System.out.print(x + " ");
-		for(int i=0;i<list[x].size();i++) {
-			int next = list[x].get(i);
-			if(!visited[next]) {
-				dfs(next);
-			}
-		}
-	}
-	
-	public static void bfs(int x) {
-		visited[x] = true;
-		Queue<Integer> q = new LinkedList<Integer>();
-		q.add(x);
-		
-		while(!q.isEmpty()) {
-			int next = q.poll();
-			System.out.print(next + " ");
-			for(int i=0;i<list[next].size();i++) {
-				int a = list[next].get(i);
-				if(!visited[a]) {
-					q.add(a);
-					visited[a] = true;
-				}
-			}
-		}
-	}
+    public static void main(String[] args) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        V = Integer.parseInt(st.nextToken());
+
+        map = new int[N+1][N+1];
+        for(int i=0;i<M;i++) {
+            st = new StringTokenizer(br.readLine());
+            int x = Integer.parseInt(st.nextToken());
+            int y = Integer.parseInt(st.nextToken());
+            // 인접 행렬 만들기
+            map[x][y] = 1;
+            map[y][x] = 1;
+        }
+
+        visited = new int[N+1];
+        dfs(V);
+        System.out.println();
+        visited = new int[N+1];
+        bfs(V);
+
+    }
+
+    static void dfs(int v) {
+        // v : 시작 정점
+        System.out.print(v + " ");
+        visited[v] = 1;
+        for(int i=1;i<=N;i++) {
+            if(map[v][i]==1 && visited[i]==0) {
+                visited[i]=1;
+                dfs(i);
+            }
+        }
+    }
+
+    static void bfs(int v) {
+        // v : 시작 정점
+        ArrayDeque<Integer> q = new ArrayDeque<>();
+        visited[v] = 1;
+        q.add(v);
+
+        while(!q.isEmpty()) {
+            int nv = q.poll();
+            System.out.print(nv + " ");
+            for(int i=1;i<=N;i++) {
+                if(map[nv][i]==1 && visited[i]==0) {
+                    q.add(i);
+                    visited[i]=1;
+                }
+            }
+        }
+    }
+
 }
